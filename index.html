@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>100 Bài Bolero Remix Được Yêu Thích Nhất</title>
+<style>
+:root{--bg:#0f0f14;--card:#1a1a22;--line:#2a2a35;--text:#eee;--muted:#999;--accent:#ff3d6e}
+*{box-sizing:border-box}
+body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
+header{padding:24px 16px 8px;text-align:center}
+h1{margin:0 0 4px;font-size:clamp(20px,4vw,30px);color:var(--accent)}
+header p{margin:0;color:var(--muted);font-size:14px}
+.player{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 16px}
+.wrap{max-width:900px;margin:0 auto}
+.video{position:relative;width:100%;max-width:560px;margin:0 auto;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
+.video.hide{display:none}
+#yt{position:absolute;inset:0;width:100%;height:100%}
+.now{text-align:center;margin:10px 0 8px;font-weight:600;min-height:20px}
+.ctrl{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+button{border:0;border-radius:10px;padding:10px 16px;font-size:15px;font-weight:600;cursor:pointer;background:#2a2a35;color:#fff}
+button.main{background:var(--accent);min-width:110px}
+button.on{background:#3b7cff}
+.tools{display:flex;gap:8px;margin-top:10px;justify-content:center;flex-wrap:wrap}
+input{flex:1;min-width:180px;max-width:360px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px}
+main{max-width:900px;margin:0 auto;padding:12px 16px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
+.song{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
+.song:hover{border-color:#444}
+.song.active{border-color:var(--accent);background:#2a1520}
+.num{min-width:30px;height:30px;border-radius:50%;background:#2a2a35;display:grid;place-items:center;font-weight:700;font-size:12px;color:var(--accent)}
+.song.active .num{background:var(--accent);color:#fff}
+.name{flex:1;font-size:14px}
+</style>
+</head>
+<body>
+<header>
+  <h1>🎵 100 Bài Bolero Remix</h1>
+  <p>Bấm ▶ Phát để nghe lần lượt cả 100 bài · bấm vào tên bài để chuyển bài</p>
+</header>
+<div class="player"><div class="wrap">
+  <div class="video" id="vbox"><div id="yt"></div></div>
+  <div class="now" id="now">Chưa phát</div>
+  <div class="ctrl">
+    <button id="prev">⏮</button>
+    <button id="play" class="main">▶ Phát</button>
+    <button id="next">⏭</button>
+    <button id="shuf">🔀 Trộn bài</button>
+    <button id="vid">🎬 Ẩn video</button>
+  </div>
+  <div class="tools"><input id="q" type="search" placeholder="Tìm tên bài hát..."></div>
+</div></div>
+<main id="list"></main>
+<script>
+const DATA = [["Ai Khổ Vì Ai", "uM-LmQO7n28"], ["Anh Tí Anh Tèo", "fneDh3LNJ7c"], ["Bạc Trắng Tình Đời", "skWvzjHCUtQ"], ["Bao Giờ Biết Tương Tư", "hF-0qzXI5nA"], ["Bậu Vừa Lòng Chưa", "1oSGn7pwsUU"], ["Bến Sông Chờ", "h5odXQzQSRk"], ["Biển Tình", "5f7UbTu1KMs"], ["Bội Bạc", "zCWF3LXftVg"], ["Bông Cỏ May", "XBWuXAPNnOg"], ["Buồn Làm Chi Em Ơi", "__enl0ZtduI"], ["Căn Nhà Màu Tím", "cltPZcVTjmg"], ["Căn Nhà Ngoại Ô", "m2TO57AXTrA"], ["Cát Bụi Cuộc Đời", "HQie8_8Ghik"], ["Câu Chuyện Đầu Năm", "ccIOeTXePyg"], ["Cho Vừa Lòng Em", "gPXZTNzIV5M"], ["Chút Kỷ Niệm Buồn", "OFtQUrahGko"], ["Chuyện Giàn Thiên Lý", "buxFxzdqIoo"], ["Chuyến Tàu Hoàng Hôn", "huDNFSrjHXU"], ["Chuyện Tình Không Dĩ Vãng", "xEEXZGnsmm4"], ["Chuyện Nàng Trinh Nữ Tên Thi", "Lf8Y1KgzXKk"], ["Cô Hàng Xóm", "gg-F3yA95qk"], ["Cô Thắm Về Làng", "9G3sKzQE5-k"], ["Cỏ Úa", "D5R_CuUx-GQ"], ["Cung Đàn Có Anh", "loK5kZqZoNo"], ["Dang Dở", "07uZPzl95MU"], ["Đắp Mộ Cuộc Tình", "joTviK4Vfnk"], ["Đập Vỡ Cây Đàn", "Y-aSiVXNRMk"], ["Đêm Buồn Tỉnh Lẻ", "kyZP3FQAM4Q"], ["Đêm Tâm Sự", "O1XI6B-N9gU"], ["Điệu Lý Qua Cầu", "P8A4tcRuviE"], ["Đính Ước", "5YWXwKMwcQY"], ["Đôi Mắt Người Xưa", "p-0Rp4h-atc"], ["Đồi Thông Hai Mộ", "4wmJlTARVSI"], ["Đời Tôi Cô Đơn", "u7CsT2WQses"], ["Dù Anh Nghèo", "iem6H_3oQ_A"], ["Đừng Nói Xa Nhau", "cZ7QOoLbXxw"], ["Đường Tình Đôi Ngả", "ZjwvRhe4658"], ["Duyên Kiếp", "vSezX8KaMmw"], ["Duyên Phận", "xYQ_HVZJoZ8"], ["Em Đi Trên Cỏ Non", "BHRq9UzVnLc"], ["Gặp Nhau Làm Ngơ", "v6P2CEvrijY"], ["Giã Từ", "yesvPIh2mkQ"], ["Giọt Lệ Đài Trang", "G4suae9Z28o"], ["Giọt Nước Mắt Đàn Ông", "sgbKViiYBVI"], ["Hát Nữa Đi Em", "rI7xt5w3PLQ"], ["Hình Bóng Quê Nhà", "mBjQ-A3GKsI"], ["Hoa Cài Mái Tóc", "B2Nn16VZMlM"], ["Hoa Sứ Nhà Nàng", "mtzQk3B1a2U"], ["Hoa Trinh Nữ", "JG_k0WYqGAY"], ["Hồi Tưởng", "YbOlN4ybYes"], ["Không", "QCcJR-HkH08"], ["Không Phải Tại Chúng Mình", "iI-e3pUYerA"], ["Khúc Thụy Du", "SMLf-0Pb9os"], ["Khung Trời Tuổi Mộng", "Nv52bgUGjNs"], ["Kiếp Cầm Ca", "VcYFvTb23A4"], ["Kiếp Tằm", "hEuyW1zMJnE"], ["Lá Diêu Bông", "cTw6d9h5Dps"], ["Lá Thư Cuối Cùng", "uwx-Q6yFdO8"], ["LK Chiều Cuối Tuần", "Cnw4Bld-0gE"], ["Lời Đắng Cho Cuộc Tình", "L7qTSmaumXM"], ["Mấy Nhịp Cầu Tre", "SlU4D-rSqdY"], ["Ngày Xưa Anh Nói", "Uinnr35Jejg"], ["Ngựa Ô Thương Nhớ", "Koa0Fwuwv_c"], ["Người Yêu Cô Đơn", "nyjVCFTUC4o"], ["Nhật Ký Đời Tôi", "Z1U4bNCH3To"], ["Nó", "BhFkZCJkX84"], ["Nối Lại Tình Xưa", "R_BpUr3cZZ4"], ["Nói Với Người Tình", "_AorOQvnl-Q"], ["Nửa Vầng Trăng", "bSO9a3ifCTI"], ["Phải Lòng Con Gái Bến Tre", "LpbQFOvJmbc"], ["Phận Tơ Tằm", "F5SL87_s_og"], ["Sao Không Thấy Anh Về", "BRc494ARPXU"], ["Sầu Đông", "m5KJkelm1gg"], ["Sầu Lẻ Bóng", "u61_7y-xmwc"], ["Sầu Tím Thiệp Hồng", "9oeyLOaNV0o"], ["Sợi Nhớ Sợi Thương", "uk8lDSfglEo"], ["Sương Trắng Miền Quê Ngoại", "sIUfPgNUCsk"], ["Tàu Về Quê Hương", "NxFKdi96Gzc"], ["Thành Phố Buồn", "yaWqayenGyY"], ["Thói Đời", "QylWUhmKWq8"], ["Thuyền Hoa", "wYDNM9PsXPs"], ["Tiễn Đưa", "2t_138TZFMk"], ["Tiền Thắng Tình Thua", "ViBJ_UzEcns"], ["Tình Đã Bay Xa", "OmjP7xV0S98"], ["Tình Là Sợi Tơ", "eDd-2fQvDmQ"], ["Tình Nghèo Có Nhau", "mXHzWPbJkGc"], ["Tình Thắm Duyên Quê", "ClU4phFoZeg"], ["Tình Xưa Nghĩa Cũ", "lXG6CQw6_Do"], ["Tình Yêu Trên Dòng Sông Quan Họ", "0EfE89oElM4"], ["Trách Ai Bây Giờ", "C3AoJ9hTxh0"], ["Trách Ai Vô Tình", "bFnb_Fu93RQ"], ["Tương Tư Nàng Ca Sĩ", "eXxCihBmaCA"], ["Tùy Hứng Lý Qua Cầu", "JlhbhSG7NRk"], ["Về Đâu Mái Tóc Người Thương", "mCzuo_cMY8I"], ["Vì Lỡ Thương Nhau", "gEDpsS7p6Co"], ["Vọng Cổ Tình Xuân", "Ld7DwKrDdpE"], ["Vui Tết Miệt Vườn", "yCHmCwHN4_E"], ["Vùng Lá Me Bay", "dNVHwY9B43I"], ["Yêu Một Mình", "vsfYgRtEP1k"], ["Yêu Thương Đã Nhạt Hòa", "Yj8up5a37aw"]];
+let order = DATA.map((_,i)=>i), pos = -1, player, ready=false, shuffle=false, playing=false;
+const list=document.getElementById('list'), now=document.getElementById('now'), playBtn=document.getElementById('play');
+const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
+DATA.forEach(([name],i)=>{const el=document.createElement('div');el.className='song';el.id='s'+i;
+  el.innerHTML=`<div class="num">${i+1}</div><div class="name">${name}</div>`;
+  el.onclick=()=>{pos=order.indexOf(i);load();};list.appendChild(el);});
+document.getElementById('q').oninput=e=>{const f=norm(e.target.value.trim());
+  DATA.forEach(([n],i)=>document.getElementById('s'+i).style.display=(!f||norm(n).includes(f))?'':'none');};
+function cur(){return order[pos];}
+function load(){ if(!ready) return; const i=cur(); player.loadVideoById(DATA[i][1]);
+  document.querySelectorAll('.song.active').forEach(e=>e.classList.remove('active'));
+  const el=document.getElementById('s'+i); el.classList.add('active'); el.scrollIntoView({block:'nearest',behavior:'smooth'});
+  now.textContent=`Đang phát ${i+1}. ${DATA[i][0]}`; document.title=`▶ ${DATA[i][0]}`; }
+function next(){pos=(pos+1)%order.length;load();}
+function prev(){pos=(pos-1+order.length)%order.length;load();}
+playBtn.onclick=()=>{ if(!ready) return; if(pos<0){pos=0;load();return;} playing?player.pauseVideo():player.playVideo(); };
+document.getElementById('next').onclick=next;
+document.getElementById('prev').onclick=prev;
+document.getElementById('shuf').onclick=e=>{shuffle=!shuffle;e.target.classList.toggle('on',shuffle);
+  const c=pos>=0?cur():null; order=DATA.map((_,i)=>i);
+  if(shuffle){for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}}
+  if(c!==null) pos=order.indexOf(c);};
+document.getElementById('vid').onclick=e=>{const v=document.getElementById('vbox');v.classList.toggle('hide');
+  e.target.textContent=v.classList.contains('hide')?'🎬 Hiện video':'🎬 Ẩn video';};
+function onYouTubeIframeAPIReady(){
+  player=new YT.Player('yt',{videoId:DATA[0][1],playerVars:{playsinline:1,rel:0},
+    events:{onReady:()=>{ready=true;},
+      onStateChange:e=>{ if(e.data===YT.PlayerState.ENDED) next();
+        playing = e.data===YT.PlayerState.PLAYING;
+        playBtn.textContent = playing?'⏸ Dừng':'▶ Phát';
+        if(e.data===YT.PlayerState.PLAYING && pos<0){pos=0;load();} },
+      onError:()=>setTimeout(next,800)}});
+}
+</script>
+<script src="https://www.youtube.com/iframe_api"></script>
+</body>
+</html>
