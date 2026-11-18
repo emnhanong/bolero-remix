@@ -3,41 +3,44 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>100 Bài Bolero Trữ Tình</title>
+<title>Bolero & Nhạc Vàng</title>
 <style>
 :root{--bg:#0f0f14;--card:#1a1a22;--line:#2a2a35;--text:#eee;--muted:#999;--accent:#ff3d6e}
 *{box-sizing:border-box}
 body{margin:0;font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--text)}
-header{padding:24px 16px 8px;text-align:center}
+header{padding:20px 16px 6px;text-align:center}
 h1{margin:0 0 4px;font-size:clamp(20px,4vw,30px);color:var(--accent)}
-header p{margin:0;color:var(--muted);font-size:14px}
-.player{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:12px 16px}
+header p{margin:0;color:var(--muted);font-size:13px}
+.player{position:sticky;top:0;z-index:5;background:var(--bg);border-bottom:1px solid var(--line);padding:10px 16px}
 .wrap{max-width:900px;margin:0 auto}
 .video{position:relative;width:100%;max-width:560px;margin:0 auto;aspect-ratio:16/9;background:#000;border-radius:12px;overflow:hidden}
 .video.hide{display:none}
 #yt{position:absolute;inset:0;width:100%;height:100%}
-.now{text-align:center;margin:10px 0 8px;font-weight:600;min-height:20px}
-.ctrl{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
-button{border:0;border-radius:10px;padding:10px 16px;font-size:15px;font-weight:600;cursor:pointer;background:#2a2a35;color:#fff}
+.now{text-align:center;margin:8px 0;font-weight:600;min-height:20px}
+.ctrl,.tabs,.tools{display:flex;gap:8px;justify-content:center;flex-wrap:wrap}
+.tabs,.tools{margin-top:8px}
+button{border:0;border-radius:10px;padding:9px 14px;font-size:15px;font-weight:600;cursor:pointer;background:#2a2a35;color:#fff}
 button.main{background:var(--accent);min-width:110px}
 button.on{background:#3b7cff}
-.tools{display:flex;gap:8px;margin-top:10px;justify-content:center;flex-wrap:wrap}
+.tabs button{font-size:14px;padding:7px 12px}
 input{flex:1;min-width:180px;max-width:360px;padding:9px 12px;border-radius:10px;border:1px solid var(--line);background:var(--card);color:var(--text);font-size:15px}
 main{max-width:900px;margin:0 auto;padding:12px 16px 40px;display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px}
 .song{display:flex;align-items:center;gap:10px;background:var(--card);border:1px solid var(--line);border-radius:10px;padding:8px 10px;cursor:pointer}
 .song:hover{border-color:#444}
 .song.active{border-color:var(--accent);background:#2a1520}
 .num{min-width:30px;height:30px;border-radius:50%;background:#2a2a35;display:grid;place-items:center;font-weight:700;font-size:12px;color:var(--accent)}
+.song.v .num{color:#f5b942}
 .song.active .num{background:var(--accent);color:#fff}
 .name{flex:1;font-size:14px}
+.name small{display:block;color:var(--muted);font-size:12px}
 .src{font-size:11px;font-weight:700;color:#fff;text-decoration:none;padding:3px 6px;border-radius:6px;background:#8d22c3}
 .src.n{background:#1a8cd8}
 </style>
 </head>
 <body>
 <header>
-  <h1>🎵 100 Bài Bolero Trữ Tình</h1>
-  <p>Bấm ▶ Phát để nghe lần lượt cả 100 bài · bấm tên bài để chuyển · Z = Zing MP3, N = NhacCuaTui</p>
+  <h1>🎵 Bolero & Nhạc Vàng</h1>
+  <p>Chọn danh sách · bấm ▶ Phát để nghe lần lượt · bấm tên bài để chuyển · Z = Zing MP3, N = NhacCuaTui</p>
 </header>
 <div class="player"><div class="wrap">
   <div class="video" id="vbox"><div id="yt"></div></div>
@@ -49,38 +52,50 @@ main{max-width:900px;margin:0 auto;padding:12px 16px 40px;display:grid;grid-temp
     <button id="shuf">🔀 Trộn bài</button>
     <button id="vid">🎬 Ẩn video</button>
   </div>
-  <div class="tools"><input id="q" type="search" placeholder="Tìm tên bài hát..."></div>
+  <div class="tabs" id="tabs">
+    <button data-g="" class="on">Tất cả</button>
+    <button data-g="b">Bolero (100)</button>
+    <button data-g="v">Nhạc Vàng trước 1975 (104)</button>
+  </div>
+  <div class="tools"><input id="q" type="search" placeholder="Tìm tên bài hoặc ca sĩ..."></div>
 </div></div>
 <main id="list"></main>
 <script>
-const DATA = [["Ai Khổ Vì Ai", "XURrv3FOmxI"], ["Anh Tí Anh Tèo", "fneDh3LNJ7c"], ["Bạc Trắng Tình Đời", "5hUEQjy7KRQ"], ["Bao Giờ Biết Tương Tư", "AZW1rl2TWIM"], ["Bậu Vừa Lòng Chưa", "AH-o3g2jHZs"], ["Bến Sông Chờ", "PTN9aYHRawo"], ["Biển Tình", "RdmVS0Jk7Go"], ["Bội Bạc", "hm4V5WDnaoQ"], ["Bông Cỏ May", "flWw97InPi8"], ["Buồn Làm Chi Em Ơi", "roerp0dLoE0"], ["Căn Nhà Màu Tím", "VxPwx6s7Sew"], ["Căn Nhà Ngoại Ô", "snO4XwNUDag"], ["Cát Bụi Cuộc Đời", "auvvvAV2EQw"], ["Câu Chuyện Đầu Năm", "ccIOeTXePyg"], ["Cho Vừa Lòng Em", "fIlQv0Tf0nA"], ["Chút Kỷ Niệm Buồn", "MN1P7usahI4"], ["Chuyện Giàn Thiên Lý", "AU_Q3rd2KGE"], ["Chuyến Tàu Hoàng Hôn", "VGn87SE--sU"], ["Chuyện Tình Không Dĩ Vãng", "DQ7d5-6BSk0"], ["Chuyện Nàng Trinh Nữ Tên Thi", "4ni52j5XdwI"], ["Cô Hàng Xóm", "wxPPcumAiU4"], ["Cô Thắm Về Làng", "sUu53VwbfQk"], ["Cỏ Úa", "5-pYmf7Es1o"], ["Cung Đàn Có Anh", "S2Sgu25XHXY"], ["Dang Dở", "O4pBTtx21zs"], ["Đắp Mộ Cuộc Tình", "qJkv5e53tRg"], ["Đập Vỡ Cây Đàn", "X9dMxZZtzVI"], ["Đêm Buồn Tỉnh Lẻ", "Mn1VbihXmEg"], ["Đêm Tâm Sự", "sLqTRUQdddg"], ["Điệu Lý Qua Cầu", "t8m5dJqoCSw"], ["Đính Ước", "IQ13koGOHUA"], ["Đôi Mắt Người Xưa", "icOb16NSCcc"], ["Đồi Thông Hai Mộ", "kZQz1SorVzU"], ["Đời Tôi Cô Đơn", "71ebC_a2hLc"], ["Dù Anh Nghèo", "kxqLCmPX0wY"], ["Đừng Nói Xa Nhau", "5wtrRBpm7eU"], ["Đường Tình Đôi Ngả", "ML9l23my1io"], ["Duyên Kiếp", "HAEddg-Q8_Q"], ["Duyên Phận", "2kbtgdo9Jzs"], ["Em Đi Trên Cỏ Non", "cvkwgG3pLiw"], ["Gặp Nhau Làm Ngơ", "IikLzRks8RY"], ["Giã Từ", "ODZoY6anF0g"], ["Giọt Lệ Đài Trang", "sTR6xXjKNG4"], ["Giọt Nước Mắt Đàn Ông", "wLBGze6KfgQ"], ["Hát Nữa Đi Em", "B7learhYfy8"], ["Hình Bóng Quê Nhà", "a6UhO8kaYx8"], ["Hoa Cài Mái Tóc", "taZEYXJJXdc"], ["Hoa Sứ Nhà Nàng", "-iy9t4bMDHg"], ["Hoa Trinh Nữ", "GFVztgwtfLU"], ["Hồi Tưởng", "vnsVEB78K4s"], ["Không", "71on-nXwxi0"], ["Không Phải Tại Chúng Mình", "RME6TnKfJ-Q"], ["Khúc Thụy Du", "wEfAmD2msEA"], ["Khung Trời Tuổi Mộng", "lVzIDG6205A"], ["Kiếp Cầm Ca", "JZhjccdpOts"], ["Kiếp Tằm", "o7Kx0u1a6es"], ["Lá Diêu Bông", "140SDO8xzTk"], ["Lá Thư Cuối Cùng", "ItsEPjaTnaU"], ["LK Chiều Cuối Tuần", "PsCZKMRH3IE"], ["Lời Đắng Cho Cuộc Tình", "z2B52tf6gjk"], ["Mấy Nhịp Cầu Tre", "Njbb89MZaGE"], ["Ngày Xưa Anh Nói", "7wWOg7xgqU8"], ["Ngựa Ô Thương Nhớ", "Koa0Fwuwv_c"], ["Người Yêu Cô Đơn", "wzKgcGLqTL8"], ["Nhật Ký Đời Tôi", "KjyqnNFft0w"], ["Nó", "hPG4bNE1L20"], ["Nối Lại Tình Xưa", "nLPpuZ834yA"], ["Nói Với Người Tình", "-oJu5yCO7cA"], ["Nửa Vầng Trăng", "7CPlZxp5XZ4"], ["Phải Lòng Con Gái Bến Tre", "2dXZMsVnh08"], ["Phận Tơ Tằm", "ahQclCm755U"], ["Sao Không Thấy Anh Về", "JjfnlVHDaPs"], ["Sầu Đông", "HZu1Hg6UBf8"], ["Sầu Lẻ Bóng", "-nwz9UPLVk8"], ["Sầu Tím Thiệp Hồng", "RVP5N4QXHeQ"], ["Sợi Nhớ Sợi Thương", "68UWf8XD4cQ"], ["Sương Trắng Miền Quê Ngoại", "utj0ukyAXjk"], ["Tàu Về Quê Hương", "gfQpMHVpYi4"], ["Thành Phố Buồn", "3RSPtDUIngU"], ["Thói Đời", "4h30cuEYHGI"], ["Thuyền Hoa", "VcyPoI7xQ4w"], ["Tiễn Đưa", "HgH_TY8_sgk"], ["Tiền Thắng Tình Thua", "2qY0CmHZEUM"], ["Tình Đã Bay Xa", "qAjt7KIk-Js"], ["Tình Là Sợi Tơ", "ii_V3osnBdk"], ["Tình Nghèo Có Nhau", "HGJ__mvo9P8"], ["Tình Thắm Duyên Quê", "xC4aEw9-ZzU"], ["Tình Xưa Nghĩa Cũ", "NhR2pKpdwKc"], ["Tình Yêu Trên Dòng Sông Quan Họ", "oh9AJzjHN1c"], ["Trách Ai Bây Giờ", "oG9cuN2PYEo"], ["Trách Ai Vô Tình", "2NIfFOIEb4M"], ["Tương Tư Nàng Ca Sĩ", "hxlSBZO78R0"], ["Tùy Hứng Lý Qua Cầu", "suXlbOY4A94"], ["Về Đâu Mái Tóc Người Thương", "B2w0-cw-6Uw"], ["Vì Lỡ Thương Nhau", "WTNsgGEljaM"], ["Vọng Cổ Tình Xuân", "2yhlhz9gjNg"], ["Vui Tết Miệt Vườn", "sAIVYLNAGPU"], ["Vùng Lá Me Bay", "z8DLkLnemFY"], ["Yêu Một Mình", "1PzQEt_Yops"], ["Yêu Thương Đã Nhạt Nhòa", "WQx_dgKBMlI"]];
-let order = DATA.map((_,i)=>i), pos = -1, player, ready=false, shuffle=false, playing=false;
-const list=document.getElementById('list'), now=document.getElementById('now'), playBtn=document.getElementById('play');
+const B = [["Ai Khổ Vì Ai","XURrv3FOmxI"],["Anh Tí Anh Tèo","fneDh3LNJ7c"],["Bạc Trắng Tình Đời","5hUEQjy7KRQ"],["Bao Giờ Biết Tương Tư","AZW1rl2TWIM"],["Bậu Vừa Lòng Chưa","AH-o3g2jHZs"],["Bến Sông Chờ","PTN9aYHRawo"],["Biển Tình","RdmVS0Jk7Go"],["Bội Bạc","hm4V5WDnaoQ"],["Bông Cỏ May","flWw97InPi8"],["Buồn Làm Chi Em Ơi","roerp0dLoE0"],["Căn Nhà Màu Tím","VxPwx6s7Sew"],["Căn Nhà Ngoại Ô","snO4XwNUDag"],["Cát Bụi Cuộc Đời","auvvvAV2EQw"],["Câu Chuyện Đầu Năm","ccIOeTXePyg"],["Cho Vừa Lòng Em","fIlQv0Tf0nA"],["Chút Kỷ Niệm Buồn","MN1P7usahI4"],["Chuyện Giàn Thiên Lý","AU_Q3rd2KGE"],["Chuyến Tàu Hoàng Hôn","VGn87SE--sU"],["Chuyện Tình Không Dĩ Vãng","DQ7d5-6BSk0"],["Chuyện Nàng Trinh Nữ Tên Thi","4ni52j5XdwI"],["Cô Hàng Xóm","wxPPcumAiU4"],["Cô Thắm Về Làng","sUu53VwbfQk"],["Cỏ Úa","5-pYmf7Es1o"],["Cung Đàn Có Anh","S2Sgu25XHXY"],["Dang Dở","O4pBTtx21zs"],["Đắp Mộ Cuộc Tình","qJkv5e53tRg"],["Đập Vỡ Cây Đàn","X9dMxZZtzVI"],["Đêm Buồn Tỉnh Lẻ","Mn1VbihXmEg"],["Đêm Tâm Sự","sLqTRUQdddg"],["Điệu Lý Qua Cầu","t8m5dJqoCSw"],["Đính Ước","IQ13koGOHUA"],["Đôi Mắt Người Xưa","icOb16NSCcc"],["Đồi Thông Hai Mộ","kZQz1SorVzU"],["Đời Tôi Cô Đơn","71ebC_a2hLc"],["Dù Anh Nghèo","kxqLCmPX0wY"],["Đừng Nói Xa Nhau","5wtrRBpm7eU"],["Đường Tình Đôi Ngả","ML9l23my1io"],["Duyên Kiếp","HAEddg-Q8_Q"],["Duyên Phận","2kbtgdo9Jzs"],["Em Đi Trên Cỏ Non","cvkwgG3pLiw"],["Gặp Nhau Làm Ngơ","IikLzRks8RY"],["Giã Từ","ODZoY6anF0g"],["Giọt Lệ Đài Trang","sTR6xXjKNG4"],["Giọt Nước Mắt Đàn Ông","wLBGze6KfgQ"],["Hát Nữa Đi Em","B7learhYfy8"],["Hình Bóng Quê Nhà","a6UhO8kaYx8"],["Hoa Cài Mái Tóc","taZEYXJJXdc"],["Hoa Sứ Nhà Nàng","-iy9t4bMDHg"],["Hoa Trinh Nữ","GFVztgwtfLU"],["Hồi Tưởng","vnsVEB78K4s"],["Không","71on-nXwxi0"],["Không Phải Tại Chúng Mình","RME6TnKfJ-Q"],["Khúc Thụy Du","wEfAmD2msEA"],["Khung Trời Tuổi Mộng","lVzIDG6205A"],["Kiếp Cầm Ca","JZhjccdpOts"],["Kiếp Tằm","o7Kx0u1a6es"],["Lá Diêu Bông","140SDO8xzTk"],["Lá Thư Cuối Cùng","ItsEPjaTnaU"],["LK Chiều Cuối Tuần","PsCZKMRH3IE"],["Lời Đắng Cho Cuộc Tình","z2B52tf6gjk"],["Mấy Nhịp Cầu Tre","Njbb89MZaGE"],["Ngày Xưa Anh Nói","7wWOg7xgqU8"],["Ngựa Ô Thương Nhớ","Koa0Fwuwv_c"],["Người Yêu Cô Đơn","wzKgcGLqTL8"],["Nhật Ký Đời Tôi","KjyqnNFft0w"],["Nó","hPG4bNE1L20"],["Nối Lại Tình Xưa","nLPpuZ834yA"],["Nói Với Người Tình","-oJu5yCO7cA"],["Nửa Vầng Trăng","7CPlZxp5XZ4"],["Phải Lòng Con Gái Bến Tre","2dXZMsVnh08"],["Phận Tơ Tằm","ahQclCm755U"],["Sao Không Thấy Anh Về","JjfnlVHDaPs"],["Sầu Đông","HZu1Hg6UBf8"],["Sầu Lẻ Bóng","-nwz9UPLVk8"],["Sầu Tím Thiệp Hồng","RVP5N4QXHeQ"],["Sợi Nhớ Sợi Thương","68UWf8XD4cQ"],["Sương Trắng Miền Quê Ngoại","utj0ukyAXjk"],["Tàu Về Quê Hương","gfQpMHVpYi4"],["Thành Phố Buồn","3RSPtDUIngU"],["Thói Đời","4h30cuEYHGI"],["Thuyền Hoa","VcyPoI7xQ4w"],["Tiễn Đưa","HgH_TY8_sgk"],["Tiền Thắng Tình Thua","2qY0CmHZEUM"],["Tình Đã Bay Xa","qAjt7KIk-Js"],["Tình Là Sợi Tơ","ii_V3osnBdk"],["Tình Nghèo Có Nhau","HGJ__mvo9P8"],["Tình Thắm Duyên Quê","xC4aEw9-ZzU"],["Tình Xưa Nghĩa Cũ","NhR2pKpdwKc"],["Tình Yêu Trên Dòng Sông Quan Họ","oh9AJzjHN1c"],["Trách Ai Bây Giờ","oG9cuN2PYEo"],["Trách Ai Vô Tình","2NIfFOIEb4M"],["Tương Tư Nàng Ca Sĩ","hxlSBZO78R0"],["Tùy Hứng Lý Qua Cầu","suXlbOY4A94"],["Về Đâu Mái Tóc Người Thương","B2w0-cw-6Uw"],["Vì Lỡ Thương Nhau","WTNsgGEljaM"],["Vọng Cổ Tình Xuân","2yhlhz9gjNg"],["Vui Tết Miệt Vườn","sAIVYLNAGPU"],["Vùng Lá Me Bay","z8DLkLnemFY"],["Yêu Một Mình","1PzQEt_Yops"],["Yêu Thương Đã Nhạt Nhòa","WQx_dgKBMlI"]];
+const V = [[1,"Ai Ra Xứ Huế","Hoàng Oanh, Duy Khánh","dkCtL6t0gWk"],[2,"Ăn Năn","Giao Linh","-gxYKNJoQUw"],[3,"Anh Buồn Em Thương","Thanh Phong","uqRod65BIEU"],[4,"Anh Ơi Nếu Đừng Dang Dở","Thanh Thúy","bxDW7vKHdkg"],[5,"Bão Rớt","Thái Châu","YoyhVlI3_rI"],[6,"Bi Ca Elegie","Phạm Duy, Uyên Phương","zMAtCRbMzek"],[7,"Biển Tình","Thanh Tuyền","MU0QVigj9Ug"],[8,"Biết Đến Bao Giờ","Minh Hiếu","5SKUubMJMew"],[9,"Biết Thương Ai","Hương Lan","Qe8uAQLMfhs"],[10,"Bóng Nhỏ Đường Chiều","Lâm Hoài Phương","Lbukgggxz-M"],[11,"Căn Nhà Dĩ Vãng","Khánh Bình","YWB6IzeIOyU"],[12,"Căn Nhà Mộng Ước","Trương Minh","o4D-1IZIDno"],[13,"Chẳng Làm Sao","Thái Hiền","snIM5IlbFeU"],[14,"Chỉ Một Lời Thôi","Giang Tử, Giao Linh","LuldDwWIzXc"],[15,"Chia Ly","Giao Linh, Phương Đài","E9KwnE5kZe4"],[16,"Chiều Cuối Tuần","Giáng Tiên","E5l-dA5FXl4"],[17,"Chiều Mưa Qua Sông","Giao Linh, Tuấn Vũ","2uo6DRIY9JA"],[18,"Chiều Tà","Phạm Duy, Uyên Phương","nJ6d73ahzvw"],[19,"Cho Em Tình Yêu Và Ngăn Cách","Kiều Oanh","VNIK3xSrUBk"],[20,"Chủ Nhật Buồn","Phạm Duy, Khánh Ly","Xj964QuiwZc"],[21,"Chuyến Bến","Lệ Thu","T2mvqNqAvrQ"],[22,"Chuyện Buồn Năm Cũ","Hoàng Oanh","dy-NgidwQLo"],[23,"Chuyện Tình Hoa Mười Giờ","Thanh Tuyền","b8Kh3ScC55s"],[24,"Chuyện Tình Bé Nhỏ","Duy Quang","qUCOTbKfHLo"],[25,"Chuyện Tình Hoa Muống Biển","Giao Linh","xXB0kpkYyRA"],[26,"Có Bao Giờ","Giáng Thu","N5z4GFsgQE0"],[27,"Cô Đò Yêu Dấu","Hoàng Oanh","laxfEWx1FN0"],[31,"Đắng Cay Nửa Đời","Trường Thanh","Chp3WImCjXY"],[32,"Đêm Hoang","Tuấn Vũ","a7aGGBXWrtI"],[33,"Đêm Kỉ Niệm","Thanh Tuyền, Thanh Vũ","7kmT9EHoOjY"],[34,"Đêm Tàn Bến Ngự","Thanh Thúy","nCyCgzRw8zc"],[35,"Đời Là Giấc Mơ","Duy Trác, Y Vân","0jpZaFx_5ck"],[36,"Đổi Thay","Giao Linh","JzGJR2P1dKw"],[37,"Đồng Cảnh Ngộ","Thanh Tuyền, Phương Đại","ty0PAfDIsaA"],[38,"Dòng Lệ Thương Đau","Phương Dung","ojlLbi5PkRY"],[39,"Dòng Sông Vĩnh Biệt","Lệ Thu","JPc_hUSJ8GU"],[40,"Dòng Sông Xanh","Phạm Duy, Thái Thanh","ixvLGqRlArM"],[41,"Dù Không Một Lời","Phương Đài, Thanh Tuyền","2NqR_TX5FMY"],[42,"Đưa Em Qua Cánh Đồng Vàng","Nhật Trường, Họa Mi","i4WjGkW81DU"],[43,"Đừng Phụ Lòng Nhau","Giang Tử, Thanh Tuyền","5NKelFOJwco"],[44,"Đường Tình Đôi Ngả","Giao Linh, Tuấn Vũ","kUlDnAtC6CQ"],[45,"Hoa Đào Ca","Phạm Duy, Thanh Lan","S6_QJTUVzGk"],[46,"Hoa Đêm","Anh Khoa, Giao Linh","Gk7xZmVP0Os"],[47,"Hoa Mười Giờ","Mai Thiên Vân","kweMVqhR9ss"],[48,"Hoa Xoan Bên Thềm Cũ","Hà Thanh","hP5adVcmhs0"],[49,"Hoài Cảm","Sĩ Phú","2VFTuNn9gw0"],[50,"Hương Giang Tôi Còn Chờ","Trúc Mai","OkeK8U5l-YU"],[51,"Hướng Về Hà Nội","Thái Thanh","oXloqoze15g"],[52,"Hương Xưa","Duy Trác","4A2QT8U-QzM"],[53,"Khách Lạ Đò Xưa","Hoàng Oanh","vgzPBLxuJ5E"],[54,"Không Phải Tại Chúng Mình","Trang Mỹ Dung","MvsJFCBWbQc"],[55,"Khúc Giao Duyên","Duy Khánh","QA9hJkqxppc"],[56,"Khúc Hát Mùa Chiêm","Duy Khánh, Hoàng Oanh","9TfKYDalAIc"],[57,"Khúc Hát Thanh Xuân","Phạm Duy, Thanh Lan","hiDouSqDy2c"],[58,"Khuya Nay Anh Đi Rồi","Giao Linh","Jk7s5BDQxA8"],[59,"Kỷ Niệm Chúng Mình","Thanh Tuyền","tXRgAjjGiYI"],[60,"Lá Thư Không Gửi","Mỹ Thể","cYJS4HGiHoY"],[61,"Lá Úa","Duy Trác, Uy Vân","UFZPwoGhYQw"],[62,"Lá Vàng Khóc Lá Xanh Rơi","Thanh Lan","o0P_qXrpbXk"],[63,"Lan Và Điệp 1","Nhật Trường, Hoàng Oanh","XBWxvrX9iKE"],[64,"Lệ Đá Xanh","Khánh Ly","N51hR-3cXUo"],[65,"Mang Trọn Niềm Đau","Lâm Minh Thảo","TxQrEJTHoBo"],[66,"Màu Hoa Cúc","Đức Minh","sT9yPPKrZww"],[67,"Miền Trung Thương Nhớ","Băng Châu","QAq9i3tL4dU"],[68,"Người Yêu Ơi","Khánh Ly","5bjavSqZrUg"],[69,"Nhạc Sầu Tương Tư","Hà Thanh","Wv_bYhI30Fk"],[70,"Nhật Ký Đời Tôi","Giao Linh","chxWNT4yCyM"],[74,"Nỗi Lòng","Thanh Lan","6zFR84qasIE"],[75,"Phận Buồn","Giao Linh","Zv8_E3wj9M8"],[76,"Phượng Buồn","Trang Mỹ Dung","I595StYcXw8"],[77,"Phút Cuối","Túy Hồng, Diên An","ieZ3dpK5e-w"],[78,"Phút Đầu Tiên","Sơn Ca, Duy Khánh","FN_SnV1lHj8"],[79,"Rồi Ngày Mai Xa Nhau","Giao Linh, Tuấn Vũ","KybUOuqLvyo"],[80,"Rừng Cây Trút Lá","Khánh Ly","WvRDVr351Hs"],[81,"Sao Băng","Ban Sao Băng","dmFBfT-9khQ"],[82,"Sầu","Phạm Duy, Lệ Thu","qFAJdyK66Jo"],[83,"Suối Tình","Uyên Phương, Y Vân","KI6qDiFgaxU"],[84,"Sương Lạnh Chiều Đông","Hà Thanh","G2kYibYqrOM"],[85,"Tà Áo Xanh","Thanh Lan","I0wmTDxnQqI"],[86,"Tiếng Hai Đêm","Duy Khánh, Thanh Tuyền","lVoGQ5WIuQo"],[87,"Tiếng Hát Khói Sương","Thanh Thủy","k8w2BLn1uOk"],[88,"Tiếng Ru Ngàn Đời","Chế Linh","SZ4CLmbFDWU"],[89,"Tình Bậu Muốn Thôi","Ngọc Kiều Oanh","-bgAnXTBYGQ"],[90,"Tình Em Mãi Mãi","Hoàng Oanh","e286PcsMkAc"],[91,"Tình Mong Manh","Duy Trác, Y Vân","ca4E7tXXEjs"],[92,"Tôi Đi Giữa Hoàng Hôn","Hà Thanh","s5mWiSOEWAo"],[93,"Trách Người Đi","Sĩ Phú","0CjWgc2UiKs"],[94,"Trăm Năm Bến Cũ","Duy Khánh","2Z9W6xUCFFg"],[95,"Trăng Mơ Bên Suối","Thanh Lan","1WKCnLrTZas"],[96,"Trầu Cau","Tuyết Mai, Thanh Phong","NUH1H8NT_lA"],[97,"Trở Về Dĩ Vãng","Lệ Thu","JeNDZp92lTQ"],[98,"Trong Tầm Mắt Đời","Lê Minh Trung","Qqtf84JCf1Q"],[99,"Từ Đó Em Buồn","Thanh Lan","g0J1g1HHl3Y"],[100,"Tuyệt Tình","Lệ Thu","7gDM23l1JSM"],[101,"Vai Áo Màu Xanh","Phạm Duy, Khánh Ly","MrlyXpegFGo"],[102,"Vầng Trán Suy Tư","Giao Linh","PiE9qu_9n9I"],[103,"Vào Mộng Cùng Em","Thanh Lan","B4VA15DBxaM"],[104,"Vì Lỡ Thương Nhau","Thanh Tuyền, Phương Đại","eZ_aVFCn0KE"],[105,"Vườn Tao Ngộ","Đình Phước","GC9xhczBMvI"],[106,"Xa Dấu Ngựa Hồng","Hương Lan","8oEkBTn6qdo"],[107,"Xóm Đêm","Lệ Quyên","zcJr0KtkfWM"],[108,"Xua Đi Huyền Thoại","Tuấn Quỳnh","3BeKSkejTrg"],[109,"Yêu Là Ảo Mộng","Thanh Lan","_Nl36uXhzUs"],[110,"Yêu Người Chung Vách","Lê Sang, Dương Hồng Loan","-lLI588Dqas"]];
+const DATA = [...B.map(([n,id],i)=>[i+1,n,'',id,'b']), ...V.map(([no,n,s,id])=>[no,n,s,id,'v'])];
+let group='', order=[], pos=-1, player, ready=false, shuffle=false, playing=false;
+const list=document.getElementById('list'), now=document.getElementById('now'), playBtn=document.getElementById('play'), q=document.getElementById('q');
 const norm=s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D').toLowerCase();
-DATA.forEach(([name],i)=>{const el=document.createElement('div');el.className='song';el.id='s'+i;
-  el.innerHTML=`<div class="num">${i+1}</div><div class="name">${name}</div><a class="src" target="_blank" title="Zing MP3" href="https://zingmp3.vn/tim-kiem/tat-ca?q=${encodeURIComponent(name)}">Z</a><a class="src n" target="_blank" title="NhacCuaTui" href="https://www.nhaccuatui.com/tim-kiem?q=${encodeURIComponent(name)}">N</a>`;
+DATA.forEach(([no,name,singer,,g],i)=>{const el=document.createElement('div');el.className='song '+g;el.id='s'+i;
+  el.innerHTML=`<div class="num">${no}</div><div class="name">${name}<small>${singer||(g==='b'?'Bolero':'')}</small></div><a class="src" target="_blank" title="Zing MP3" href="https://zingmp3.vn/tim-kiem/tat-ca?q=${encodeURIComponent(name)}">Z</a><a class="src n" target="_blank" title="NhacCuaTui" href="https://www.nhaccuatui.com/tim-kiem?q=${encodeURIComponent(name)}">N</a>`;
   el.querySelectorAll('a').forEach(a=>a.onclick=e=>e.stopPropagation());
-  el.onclick=()=>{pos=order.indexOf(i);load();};list.appendChild(el);});
-document.getElementById('q').oninput=e=>{const f=norm(e.target.value.trim());
-  DATA.forEach(([n],i)=>document.getElementById('s'+i).style.display=(!f||norm(n).includes(f))?'':'none');};
-function cur(){return order[pos];}
-function load(){ if(!ready) return; const i=cur(); player.loadVideoById(DATA[i][1]);
+  el.onclick=()=>{ if(!order.includes(i)) setGroup(''); pos=order.indexOf(i); load(); };
+  list.appendChild(el);});
+function buildOrder(){ const c=pos>=0?order[pos]:null;
+  order=DATA.map((_,i)=>i).filter(i=>!group||DATA[i][4]===group);
+  if(shuffle){for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}}
+  pos = c!==null ? order.indexOf(c) : -1; }
+function filter(){ const f=norm(q.value.trim());
+  DATA.forEach(([,n,s,,g],i)=>document.getElementById('s'+i).style.display=((!group||g===group)&&(!f||norm(n+' '+s).includes(f)))?'':'none'); }
+function setGroup(g){ group=g; document.querySelectorAll('#tabs button').forEach(b=>b.classList.toggle('on',b.dataset.g===g)); buildOrder(); filter(); }
+document.querySelectorAll('#tabs button').forEach(b=>b.onclick=()=>setGroup(b.dataset.g));
+q.oninput=filter;
+function load(){ if(!ready||pos<0) return; const i=order[pos]; player.loadVideoById(DATA[i][3]);
   document.querySelectorAll('.song.active').forEach(e=>e.classList.remove('active'));
   const el=document.getElementById('s'+i); el.classList.add('active'); el.scrollIntoView({block:'nearest',behavior:'smooth'});
-  now.textContent=`Đang phát ${i+1}. ${DATA[i][0]}`; document.title=`▶ ${DATA[i][0]}`; }
+  now.textContent=`Đang phát: ${DATA[i][1]}${DATA[i][2]?' – '+DATA[i][2]:''}`; document.title=`▶ ${DATA[i][1]}`; }
 function next(){pos=(pos+1)%order.length;load();}
 function prev(){pos=(pos-1+order.length)%order.length;load();}
 playBtn.onclick=()=>{ if(!ready) return; if(pos<0){pos=0;load();return;} playing?player.pauseVideo():player.playVideo(); };
 document.getElementById('next').onclick=next;
 document.getElementById('prev').onclick=prev;
-document.getElementById('shuf').onclick=e=>{shuffle=!shuffle;e.target.classList.toggle('on',shuffle);
-  const c=pos>=0?cur():null; order=DATA.map((_,i)=>i);
-  if(shuffle){for(let i=order.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[order[i],order[j]]=[order[j],order[i]];}}
-  if(c!==null) pos=order.indexOf(c);};
+document.getElementById('shuf').onclick=e=>{shuffle=!shuffle;e.target.classList.toggle('on',shuffle);buildOrder();};
 document.getElementById('vid').onclick=e=>{const v=document.getElementById('vbox');v.classList.toggle('hide');
   e.target.textContent=v.classList.contains('hide')?'🎬 Hiện video':'🎬 Ẩn video';};
+buildOrder();
 function onYouTubeIframeAPIReady(){
-  player=new YT.Player('yt',{videoId:DATA[0][1],playerVars:{playsinline:1,rel:0},
+  player=new YT.Player('yt',{videoId:DATA[0][3],playerVars:{playsinline:1,rel:0},
     events:{onReady:()=>{ready=true;},
       onStateChange:e=>{ if(e.data===YT.PlayerState.ENDED) next();
         playing = e.data===YT.PlayerState.PLAYING;
